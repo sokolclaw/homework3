@@ -70,9 +70,9 @@ school_students = [
         {'first_name': 'Саша'},
     ],
 ]
-for i in range(len(school_students)):
-    students = [student for student in school_students[i]]
-    print(f'Самое частое имя в классе {i+1}: {find_popular_name(students)}')
+for number, students in zip(range(1, len(school_students) + 1), school_students):
+    # students = [student for student in school_students[i]]
+    print(f'Самое частое имя в классе {number}: {find_popular_name(students)}')
 
 # Задание 4
 # Для каждого класса нужно вывести количество девочек и мальчиков в нём.
@@ -86,8 +86,7 @@ def who_in_class(people, males):
     names = []
     for student in people['students']:
         names.append(student['first_name'])
-    for name in names:
-        if males[name]:
+        if males[student['first_name']]:
             boys += 1
         else:
             girls += 1

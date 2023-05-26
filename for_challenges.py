@@ -46,8 +46,8 @@ groups = [
     ['Оля', 'Петя', 'Гриша'],
 ]
 
-for i in range(len(groups)):
-    print(f'Группа {i + 1}: {len(groups[i])} учеников')
+for number, group in zip(range(1, len(groups) + 1), groups):
+    print(f'Группа {number}: {len(group)} ученика')
 
 
 # Задание 5
@@ -62,6 +62,6 @@ groups = [
     ['Вася', 'Маша', 'Саша', 'Женя'],
 ]
 
-for i in range(len(groups)):
-    group = ', '.join(groups[i])
-    print(f'Группа {i + 1}: {group}')
+for gr, number in zip(groups, range(1, len(groups) + 1)):
+    group = ', '.join(gr)
+    print(f'Группа {number}: {group}')
