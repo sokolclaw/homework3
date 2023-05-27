@@ -47,24 +47,62 @@ def generate_chat_history():
     for _ in range(messages_amount):
         sent_at += datetime.timedelta(minutes=random.randint(0, 240))
         messages.append({
-            "id": uuid.uuid4(),
-            "sent_at": sent_at,
-            "sent_by": random.choice(users_ids),
-            "reply_for": random.choice(
+            'id': uuid.uuid4(),
+            'sent_at': sent_at,
+            'sent_by': random.choice(users_ids),
+            'reply_for': random.choice(
                 [
                     None,
                     (
-                        random.choice([m["id"] for m in messages])
+                        random.choice([m['id'] for m in messages])
                         if messages else None
                     ),
                 ],
             ),
-            "seen_by": random.sample(users_ids,
+            'seen_by': random.sample(users_ids,
                                      random.randint(1, len(users_ids))),
-            "text": lorem.sentence(),
+            'text': lorem.sentence(),
         })
     return messages
 
 
-if __name__ == "__main__":
-    print(generate_chat_history())
+def max_count_messages(all_messages):
+    all_users_messeges = {}
+    before_ides = [i['sent_by'] for i in all_messages]
+    ides = list(set(before_ides))
+    for id in ides:
+        a = before_ides.count(id)
+        all_users_messeges[str(id)] = a
+    max_message = max(all_users_messeges.values())
+    print(ides)
+    print(all_users_messeges)
+    for value, key in zip(all_users_messeges.values(), all_users_messeges.keys()):
+        if max_message == value:
+            return key   
+    return None
+        
+def max_answers_on_messages(all_messages):
+    all_replies = {}
+    before_replies = [i['reply_for'] for i in all_messages if i != None]
+    replies = list(set(before_replies))
+    for reply in replies:
+        if reply != None:
+            a = before_replies.count(reply)
+            all_replies[str(reply)] = a
+    max_replies = max(all_replies.values())
+    number_of_message = ''
+    for key, value in all_replies.items():
+        if max_replies == value and key != None:
+                number_of_message = key
+    for message in all_messages:
+        id, data, user, repost, watchers, text = message.values()
+        if number_of_message == str(id):
+            return user
+    return None
+
+
+
+if __name__ == '__main__':
+    # print(generate_chat_history())
+    # print(max_count_messages(generate_chat_history()))
+    print(max_answers_on_messages(generate_chat_history()))
