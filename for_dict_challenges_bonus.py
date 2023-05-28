@@ -100,9 +100,55 @@ def max_answers_on_messages(all_messages):
             return user
     return None
 
+def max_saw_messages(all_messages):
+    users = [message['sent_by'] for message in all_messages]
+    watchers_list = [len(message['seen_by']) for message in all_messages]
+    max_watchers = max(watchers_list)
+    for user, watchers in zip(users, watchers_list):
+        if max_watchers == watchers:
+            return user
 
+def data_messages_count(all_messages):
+    message_time = [str(message['sent_at']).split() for message in all_messages]
+    hour_time = [time[1].split(':') for time in message_time]
+    morning_messages = 0
+    afternoon_messages = 0
+    evening_messages = 0
+    for hour in hour_time:
+        if 4 <= int(hour[0]) < 12:
+            morning_messages += 1
+        if 12 <= int(hour[0]) < 18:
+            afternoon_messages += 1
+        if 18 <= int(hour[0]) < 24:
+            evening_messages += 1
+    when_more = 'утром'
+    if afternoon_messages > morning_messages and afternoon_messages > evening_messages:
+        when_more = 'днем'
+    if evening_messages > morning_messages and evening_messages > afternoon_messages:
+        when_more = 'вечером'
+    return f'Сообщений больше: {when_more}'
+
+# def find_longest_tread(all_messages):
+#     ids = [i['id'] for i in all_messages]
+#     replies = [i['reply_for'] for i in all_messages]
+#     first_id = ''
+#     max_replies = 0
+#     count = 0
+#     for id, reply in zip(ids, replies):
+#         while reply != None:
+#             count += 1
+#             id = reply
+
+#         if count > max_replies:
+#             max_replies = count
+#             first_id = str(id)
+#     return first_id
+    
 
 if __name__ == '__main__':
     # print(generate_chat_history())
     # print(max_count_messages(generate_chat_history()))
-    print(max_answers_on_messages(generate_chat_history()))
+    # print(max_answers_on_messages(generate_chat_history()))
+    # print(max_saw_messages(generate_chat_history()))
+    # print(data_messages_count(generate_chat_history()))
+    print(find_longest_tread(generate_chat_history()))
