@@ -83,12 +83,11 @@ def max_count_messages(all_messages):
         
 def max_answers_on_messages(all_messages):
     all_replies = {}
-    before_replies = [i['reply_for'] for i in all_messages if i != None]
+    before_replies = [i['reply_for'] for i in all_messages if i['reply_for'] != None]
     replies = list(set(before_replies))
     for reply in replies:
-        if reply != None:
-            a = before_replies.count(reply)
-            all_replies[str(reply)] = a
+        a = before_replies.count(reply)
+        all_replies[str(reply)] = a
     max_replies = max(all_replies.values())
     number_of_message = ''
     for key, value in all_replies.items():
@@ -115,12 +114,12 @@ def data_messages_count(all_messages):
     afternoon_messages = 0
     evening_messages = 0
     for hour in hour_time:
-        if 4 <= int(hour[0]) < 12:
+        if 6 <= int(hour[0]) < 12:
             morning_messages += 1
         if 12 <= int(hour[0]) < 18:
             afternoon_messages += 1
         if 18 <= int(hour[0]) < 24:
-            evening_messages += 1
+            evening_messages += 1 
     when_more = 'утром'
     if afternoon_messages > morning_messages and afternoon_messages > evening_messages:
         when_more = 'днем'
@@ -128,27 +127,34 @@ def data_messages_count(all_messages):
         when_more = 'вечером'
     return f'Сообщений больше: {when_more}'
 
-# def find_longest_tread(all_messages):
-#     ids = [i['id'] for i in all_messages]
-#     replies = [i['reply_for'] for i in all_messages]
-#     first_id = ''
-#     max_replies = 0
-#     count = 0
-#     for id, reply in zip(ids, replies):
-#         while reply != None:
-#             count += 1
-#             id = reply
-
-#         if count > max_replies:
-#             max_replies = count
-#             first_id = str(id)
-#     return first_id
+def find_longest_tread(all_messages):
+    ids = [i['id'] for i in all_messages]
+    replies = [i['reply_for'] for i in all_messages]
+    top_id = []
+    max_replies = 0
+    count = 0
+    for id, reply in zip(ids, replies):
+        for _ in range(len(ids)):
+            while reply != None:
+                count += 1
+                old_id = id
+                id = reply
+                old_reply = reply
+                reply = replies[ids.index(id)]
+            if count > max_replies:
+                max_replies = count
+                top_id = [str(id)]
+            if count == max_replies:
+                top_id.append(str(id))
+            count = 0
+                
+    return top_id
     
 
 if __name__ == '__main__':
-    # print(generate_chat_history())
-    # print(max_count_messages(generate_chat_history()))
-    # print(max_answers_on_messages(generate_chat_history()))
-    # print(max_saw_messages(generate_chat_history()))
-    # print(data_messages_count(generate_chat_history()))
+    print(generate_chat_history())
+    print(max_count_messages(generate_chat_history()))
+    print(max_answers_on_messages(generate_chat_history()))
+    print(max_saw_messages(generate_chat_history()))
+    print(data_messages_count(generate_chat_history()))
     print(find_longest_tread(generate_chat_history()))
